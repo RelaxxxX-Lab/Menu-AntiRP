@@ -1,62 +1,77 @@
-local library =
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RelaxxxX-Lab/Ui-library/refs/heads/main/Lib%20v1", true))(
-
-)
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/RelaxxxX-Lab/Ui-library/refs/heads/main/Lib%20v1", true))()
 
 local playerWindow = library:CreateWindow({text = "Misc"})
 
+-- Button: Puxar Dinheiro
 playerWindow:AddButton("Puxar Dinheiro", function()
     local Evt_R = game:service('ReplicatedStorage')["ACS_Engine"].Events:FindFirstChild("Refil")
-    local Quant =780e7
+    local Quant = 780e7
 
-    for i,v in pairs(game:GetDescendants()) do
+    for _, v in pairs(game:GetDescendants()) do
         if v:IsA("IntValue") or v:IsA("NumberValue") then
-            Evt_R:FireServer(v,-(Quant-v.Value))
+            Evt_R:FireServer(v, -(Quant - v.Value))
         end
     end
-    end)
+end)
 
+-- Button: Puxar Armas
 playerWindow:AddButton("Puxar Armas", function()
-    for i,v in game.Players:GetDescendants() do
+    for _, v in pairs(game.Players:GetDescendants()) do
         if v:IsA("Tool") then
-        v.Parent = game.Players.LocalPlayer.Backpack
+            v.Parent = game.Players.LocalPlayer.Backpack
         end
-        end
-        end)
+    end
+end)
 
-        playerWindow:AddButton("Remover Armas", function()
-            local player = game:GetService("Players").LocalPlayer
-            local backpack = player.Backpack
-    
-            for _, item in pairs(backpack:GetChildren()) do
-                if item:IsA("Tool") then
-                    item:Destroy()
+-- Button: Remover Armas
+playerWindow:AddButton("Remover Armas", function()
+    local player = game:GetService("Players").LocalPlayer
+    local backpack = player.Backpack
+
+    for _, item in pairs(backpack:GetChildren()) do
+        if item:IsA("Tool") then
+            item:Destroy()
+        end
+    end
+end)
+
+-- Button: Stamina infinita
+playerWindow:AddButton("Stamina infinita", function()
+    local cfg = require(game:GetService('ReplicatedStorage')['ACS_Engine'].GameRules.Config)
+    cfg.EnableStamina = false
+end)
+
+-- Button: Sem dano de queda
+playerWindow:AddButton("Sem dano de queda", function()
+    local cfg = require(game:GetService('ReplicatedStorage')['ACS_Engine'].GameRules.Config)
+    cfg.EnableFallDamage = false
+end)
+
+-- Button: Sem cooldown de pulo
+playerWindow:AddButton("Sem cooldown de pulo", function()
+    local cfg = require(game:GetService('ReplicatedStorage')['ACS_Engine'].GameRules.Config)
+    cfg.AntiBunnyHop = false
+end)
+
+-- Button: Anti Ragdoll
+playerWindow:AddButton("Anti Ragdoll", function()
+    spawn(function()
+        while game:GetService("RunService").Heartbeat:Wait() do
+            local chr = game.Players.LocalPlayer.Character
+            for _, v in pairs(chr:GetChildren()) do
+                if v:IsA("BallSocketConstraint") or v:IsA("HingeConstraint") or v.Name == "Controls" or v.Name == "Local Ragdoll" or v.Name == "State Handler" or v.Name == "FirstPerson" or v.Name == "FakeAdmin" then
+                    v:Destroy()
                 end
             end
-                end)
+        end
+    end)
+end)
 
-                playerWindow:AddButton("Kill All", function()
-                    game.StarterGui:SetCore("SendNotification", {
-                        Title = "Kill all Hack"; 
-                        Text = "By Pedroxz";
-                        Icon = "rbxassetid://57254792"; 
-                        
-                        Duration = 5; 
-                        })
-                        --- script 
-                        _G.Stop = false
-                         
-                        repeat game:GetService("RunService").RenderStepped:Wait()
-                        for _,v in next, game:GetService("Players"):GetPlayers() do
-                        if v ~= game:GetService("Players").LocalPlayer then
-                        local char = v.Character or workspace:FindFirstChild(v.Name)
-                        if char then
-                        pcall(function()
-                        char.Head.Anchored = true
-                        char.Head.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,2,-2.5)
-                        end)
-                        end
-                        end
-                        end
-                        until _G.Stop
-                        end)
+-- Button: Bugar Som
+playerWindow:AddButton("Bugar Som", function()
+    while task.wait() do
+        for _, player in pairs(game.Players:GetPlayers()) do
+            game:GetService('ReplicatedStorage')['ACS_Engine'].Events.Whizz:FireServer(player)
+        end
+    end
+end)

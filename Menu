@@ -1,0 +1,62 @@
+local library =
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RelaxxxX-Lab/Ui-library/refs/heads/main/Lib%20v1", true))(
+
+)
+
+local playerWindow = library:CreateWindow({text = "Misc"})
+
+playerWindow:AddButton("Puxar Dinheiro", function()
+    local Evt_R = game:service('ReplicatedStorage')["ACS_Engine"].Events:FindFirstChild("Refil")
+    local Quant =780e7
+
+    for i,v in pairs(game:GetDescendants()) do
+        if v:IsA("IntValue") or v:IsA("NumberValue") then
+            Evt_R:FireServer(v,-(Quant-v.Value))
+        end
+    end
+    end)
+
+playerWindow:AddButton("Puxar Armas", function()
+    for i,v in game.Players:GetDescendants() do
+        if v:IsA("Tool") then
+        v.Parent = game.Players.LocalPlayer.Backpack
+        end
+        end
+        end)
+
+        playerWindow:AddButton("Remover Armas", function()
+            local player = game:GetService("Players").LocalPlayer
+            local backpack = player.Backpack
+    
+            for _, item in pairs(backpack:GetChildren()) do
+                if item:IsA("Tool") then
+                    item:Destroy()
+                end
+            end
+                end)
+
+                playerWindow:AddButton("Kill All", function()
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "Kill all Hack"; 
+                        Text = "By Pedroxz";
+                        Icon = "rbxassetid://57254792"; 
+                        
+                        Duration = 5; 
+                        })
+                        --- script 
+                        _G.Stop = false
+                         
+                        repeat game:GetService("RunService").RenderStepped:Wait()
+                        for _,v in next, game:GetService("Players"):GetPlayers() do
+                        if v ~= game:GetService("Players").LocalPlayer then
+                        local char = v.Character or workspace:FindFirstChild(v.Name)
+                        if char then
+                        pcall(function()
+                        char.Head.Anchored = true
+                        char.Head.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0,2,-2.5)
+                        end)
+                        end
+                        end
+                        end
+                        until _G.Stop
+                        end)

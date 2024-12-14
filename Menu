@@ -132,6 +132,20 @@ weaponsW:AddButton("Puxar Armas v2", function()
     end
 end)
 
+weaponsW:AddButton("Munição infinita (Ebs do fono)", function()
+    local backpack = game.Players.LocalPlayer:FindFirstChild("Backpack")
+    if backpack then
+        for _, v in ipairs(backpack:GetDescendants()) do
+            if v.Name == "Ammo" then
+                v.MaxValue = math.huge
+                v.Value = math.huge
+            end
+        end
+    else
+        warn("Backpack não encontrado!")
+    end    
+end)
+
 weaponsW:AddButton("Remover Armas", function()
     local player = game:GetService("Players").LocalPlayer
     local backpack = player.Backpack
@@ -283,3 +297,14 @@ utilityW:AddButton("Bugar Som", function()
         end
     end
 end)
+
+local UIS = game:GetService("UserInputService")
+local UiLibrary = game.CoreGui:FindFirstChild("UILibrary")
+
+if UiLibrary then
+    UIS.InputBegan:Connect(function(input, gp)
+        if not gp and input.KeyCode == Enum.KeyCode.RightShift then
+            UiLibrary.Enabled = not UiLibrary.Enabled
+        end
+    end)
+end

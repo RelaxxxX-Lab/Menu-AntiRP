@@ -99,6 +99,27 @@ miscW:AddButton("Puxar Dinheiro", function()
     end
 end)
 
+miscW:AddButton("Puxar Dinheiro (Bypass)", function()
+    while true do
+        task.wait()
+    
+        for i = 1, 10 do
+            local Evt_R = game:GetService("ReplicatedStorage")["ACS_Engine"].Events:FindFirstChild("Refil")
+            local Quant = 100
+    
+            if Evt_R then
+                for _, v in pairs(game:GetDescendants()) do
+                    if v:IsA("IntValue") or v:IsA("NumberValue") then
+                        Evt_R:FireServer(v, -(Quant - v.Value))
+                    end
+                end
+            else
+                break
+            end
+        end
+    end    
+end)
+
 miscW:AddButton("Anti Algema", function() Algema() end)
 
 miscW:AddButton("Puxar Algema", function()
@@ -132,7 +153,7 @@ weaponsW:AddButton("Puxar Armas v2", function()
     end
 end)
 
-weaponsW:AddButton("Munição infinita (Ebs do fono)", function()
+weaponsW:AddButton("Munição infinita (Qualquer EB sem acs)", function()
     local backpack = game.Players.LocalPlayer:FindFirstChild("Backpack")
     if backpack then
         for _, v in ipairs(backpack:GetDescendants()) do
@@ -157,6 +178,31 @@ weaponsW:AddButton("Remover Armas", function()
 end)
 
 -- Player Window
+
+playerW:AddBox("Teleportar para", function(input, focus)
+    if not focus then
+        local players = game:GetService("Players")
+        local localPlayer = players.LocalPlayer
+        local targetPlayer = nil
+
+        -- Procurar jogador correspondente ao input
+        for _, player in pairs(players:GetPlayers()) do
+            if string.find(string.lower(player.DisplayName), string.lower(input)) or 
+               string.find(string.lower(player.Name), string.lower(input)) then
+                targetPlayer = player
+                break
+            end
+        end
+
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+            if localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(targetPosition)
+            end
+        end
+    end
+end)
+
 playerW:AddButton("Stamina infinita", function()
     local cfg = require(game:GetService('ReplicatedStorage')['ACS_Engine'].GameRules.Config)
     cfg.EnableStamina = false
@@ -288,6 +334,12 @@ local Services = setmetatable({}, {__index = function(Self, Index)
            end
        end)
     end)
+end)
+
+utilityW:AddButton("Som de tiro", function()
+        for _, player in pairs(game.Players:GetPlayers()) do
+            game:GetService('ReplicatedStorage')['ACS_Engine'].Events.Whizz:FireServer(player)
+        end
 end)
 
 utilityW:AddButton("Bugar Som", function()
